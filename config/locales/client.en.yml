@@ -58,6 +58,9 @@ en:
         select_type: "Select a type"
         condition: "Condition"
         index: "Index"
+        pro_support_button:
+          title: "Request Pro Support"
+          label: "Pro Support"
         
         message:
           wizard:

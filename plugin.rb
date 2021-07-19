@@ -33,6 +33,7 @@ if respond_to?(:register_svg_icon)
   register_svg_icon "chevron-right"
   register_svg_icon "chevron-left"
   register_svg_icon "save"
+  register_svg_icon "far-life-ring"
 end
 
 class ::Sprockets::DirectiveProcessor

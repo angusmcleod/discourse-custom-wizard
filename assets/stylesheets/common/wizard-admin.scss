@@ -2,6 +2,7 @@
 @import "wizard-manager";
 @import "wizard-api";
 @import "common/components/buttons";
+@import "wizard-variables";
 
 .admin-wizard-controls {
   display: flex;
@@ -714,4 +715,23 @@
 .select-kit.time-unit-selector {
   width: 80px;
   vertical-align: middle;
+}
+
+.btn.btn-pavilion-pro {
+  background: var(--pavilion-primary);
+  color: var(--pavilion-secondary);
+
+  .d-icon {
+    color: var(--pavilion-secondary);
+  }
+
+  &:hover,
+  &:focus {
+    background: darken($pavilionPrimary, 5%);
+
+    &[href],
+    svg.d-icon {
+      color: darken($pavilionSecondary, 10%);
+    }
+  }
 }
