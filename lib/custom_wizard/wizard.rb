@@ -6,6 +6,14 @@ require_dependency 'wizard/builder'
 
 UserHistory.actions[:custom_wizard_step] = 1000
 
+##
+# type:        step
+# number:      6
+# title:       Add the parameter to the wizard model
+# description: The template is loaded into the wizard model when it is built,
+#              our attribute has to be present, for it to build properly...
+##
+
 class CustomWizard::Wizard
   include ActiveModel::SerializerSupport
 

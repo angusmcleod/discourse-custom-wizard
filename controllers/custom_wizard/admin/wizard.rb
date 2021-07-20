@@ -82,40 +82,15 @@ class CustomWizard::AdminWizardController < CustomWizard::AdminController
       :theme_id,
       permitted: mapped_params,
       steps: [
-        :id,
-        :index,
-        :title,
-        :key,
-        :banner,
-        :raw_description,
-        :required_data_message,
-        :force_final,
-        required_data: mapped_params,
-        permitted_params: mapped_params,
-        condition: mapped_params,
+        *CustomWizard::Step.type_attributes(:permitted),
+        CustomWizard::Step.type_attributes(:mapped).map do |attribute|
+          [attribute, mapped_params]
+        end.to_h ,
         fields: [
-          :id,
-          :index,
-          :label,
-          :image,
-          :description,
-          :required,
-          :key,
-          :type,
-          :min_length,
-          :max_length,
-          :char_counter,
-          :file_types,
-          :format,
-          :limit,
-          :property,
-          :preview_template,
-          :placeholder,
-          prefill: mapped_params,
-          content: mapped_params,
-          condition: mapped_params,
-          index: mapped_params,
-          validations: {},
+          *CustomWizard::Field.type_attributes(:permitted),
+          CustomWizard::Field.type_attributes(:mapped).map do |attribute|
+            [attribute, mapped_params]
+          end.to_h
         ]
       ],
       actions: [

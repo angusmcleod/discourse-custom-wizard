@@ -3,51 +3,94 @@
 class CustomWizard::Field
   include ActiveModel::SerializerSupport
 
-  attr_reader :raw,
-              :id,
-              :type,
-              :required,
-              :value,
-              :label,
-              :description,
-              :image,
-              :key,
-              :validations,
-              :min_length,
-              :max_length,
-              :char_counter,
-              :file_types,
-              :format,
-              :limit,
-              :property,
-              :content,
-              :preview_template,
-              :placeholder
+  ##
+  # type:        step
+  # number:      3
+  # title:       Add the field name to attribute map
+  # description: The attribute map serves as a global registry for field attributes. Set the
+  #              key as the attribute name and value as an array of properties. Use the properties according to
+  #              your usecase. Here's a list and description of each of the properties.
+  #              ```
+  #              accessible: The attribute is set as a CustomWizard::Field attr_accessor
+  #              serializable: The attribute is serialized to the client
+  #              permitted: The attribute is permitted in the admin controller
+  #              mapped: The attribute is mapped and permitted (see above)
+  #              excluded: The attribute is not initialized in the constructor
+  #              ```
+  ##
 
-  attr_accessor :index,
-                :step
+  def self.attribute_map
+    {
+      raw: [],
+      id: [:serializable, :permitted],
+      index: [:accessible, :serializable, :permitted, :mapped],
+      type: [:serializable, :permitted],
+      step: [:accessible],
+      required: [:serializable, :permitted],
+      value: [:serializable],
+      description: [:serializable, :permitted],
+      image: [:serializable, :permitted],
+      key: [:permitted],
+      validations: [:serializable],
+      min_length: [:permitted],
+      max_length: [:serializable, :permitted],
+      char_counter: [:serializable, :permitted],
+      file_types: [:serializable, :permitted],
+      format: [:serializable, :permitted],
+      limit: [:serializable, :permitted],
+      property: [:serializable, :permitted],
+      # label is excluded so that it isn't initialized and the value
+      # returned by `label` method is used for serialization
+      label: [:excluded, :serializable, :permitted],
+      content: [:serializable, :permitted, :mapped],
+      prefill: [:permitted, :mapped],
+      condition: [:permitted, :mapped],
+      preview_template: [:serializable, :permitted, :mapped],
+      placeholder: [:serializable, :permitted, :mapped],
+    }
+  end
+
+  def self.all_attributes
+    attribute_map.keys
+  end
+
+  def self.included_attributes
+    all_attributes - excluded_attributes
+  end
+
+  def self.type_attributes(type)
+    attribute_map.map { |attribute, props| props.include?(type.to_sym) ? attribute : nil }.compact
+  end
+
+  def self.accessible_attributes
+    type_attributes(:accessible)
+  end
+
+  def self.excluded_attributes
+    type_attributes(:excluded)
+  end
+
+  def self.readonly_attributes
+    included_attributes - accessible_attributes
+  end
+
+  def self.serializable_attributes
+    type_attributes(:serializable)
+  end
+
+  attr_reader *readonly_attributes
+  attr_accessor *accessible_attributes
 
   def initialize(attrs)
+    attrs.each do |k, v|
+      if self.singleton_class.included_attributes.include?(k.to_sym)
+        instance_variable_set("@#{k}", v)
+      end
+    end
+
     @raw = attrs || {}
-    @id = attrs[:id]
-    @index = attrs[:index]
-    @type = attrs[:type]
     @required = !!attrs[:required]
     @value = attrs[:value] || default_value
-    @description = attrs[:description]
-    @image = attrs[:image]
-    @key = attrs[:key]
-    @validations = attrs[:validations]
-    @min_length = attrs[:min_length]
-    @max_length = attrs[:max_length]
-    @char_counter = attrs[:char_counter]
-    @file_types = attrs[:file_types]
-    @format = attrs[:format]
-    @limit = attrs[:limit]
-    @property = attrs[:property]
-    @content = attrs[:content]
-    @preview_template = attrs[:preview_template]
-    @placeholder = attrs[:placeholder]
   end
 
   def label
